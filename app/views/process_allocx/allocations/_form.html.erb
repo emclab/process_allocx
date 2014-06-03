@@ -1,0 +1,22 @@
+<% if @view_in_config && @erb_code %>
+    <%= render inline: @erb_code %>
+<% else %>
+<%= simple_form_for @allocation do |f| %>    
+	  <%= f.input :process_name, :label => t('Process'), :input_html => {:value => @process.batch_status.name} %>
+      <%= f.input :operator_id, :label => t('Operator'), :collection => Authentify::UsersHelper.return_users('index', 'process_allocx_allocations'), :include_blank => true %>
+      <%= f.input :equipment_id, :label => t('Equipment'), :collection => ProcessAllocx.equipment_class.where(decommissioned: false).order('name'), :include_blank => true %>
+      <%= f.input :description, :label => t('Description'), :input_html => {:rows => 1} %>
+      <%= f.input :qty_in, :label => t('Qty In') %>
+      <%= f.input :qty_out, :label => t('Qty Out') %>   
+	  <% if readonly?(@allocation, 'active')%>
+	    <%= f.input :active_noupdate, :label => t('Active'), :input_html => {:value => (@allocation.active ? t('Yes') : t('No'))} %>
+	  <% else %>
+	    <%= f.input :active, :label => t('Active'), :collection => [[t('Yes'), true], [t('No'), false]], :include_blank => true %>
+	  <% end %>
+	  <%= f.input :last_updated_by_name, :label => t('Last Updated By'), :readonly => true, :input_html => {:value => @allocation.last_updated_by.name} %>
+      
+      <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+	  <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %>  
+<% end %>  
+
+<% end %>

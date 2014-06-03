@@ -1,0 +1,51 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
+<div class="pagination"><%= will_paginate models %></div>
+    <table class="table table-striped">
+		<tr>
+            <th>#</th>
+			<th><%= t('Process Name') %></th>
+			<th><%= t('Description') %></th>
+			<th><%= t('Operator') %></th>
+			<th><%= t('Equipment') %></th>
+			<th><%= t('Qty In') %></th>
+			<th><%= t('Qty Out') %></th>
+			<th><%= t('Last updated by') %></th>
+			<th></th>
+		</tr>
+		<% models.each do |r| %>
+		  <tr>
+            <% if has_action_right?('show', 'process_allocx_allocations', r) %>
+                <td><%= link_to r.id.to_s, SUBURI + "/authentify/view_handler?index=1&url=#{allocation_path(r)}"  %></td>
+            <% else %>
+                <td><%= r.id %></td>
+            <% end %>
+		  	<td><%= @process.batch_status.name %></td>
+		  	<td><%= prt(r, :description)  %></td>
+		  	<td><%= prt(r, 'operator.name') %></td>
+			<td><%= prt(r, 'equipment.name') %></td>
+			<td><%= prt(r, :qty_in)  %></td>
+			<td><%= prt(r, :qty_out) %></td>
+			<td><%= prt(r, 'last_updated_by.name') %></td>    
+		    <td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_allocation_path(r)}", :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %></td>
+		    <td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_allocation_path(r, :subaction => @allocation_category)}", :class => BUTTONS_CLS['action']  if has_action_right?('update_' + @allocation_category, params[:controller], r) %></td>
+		  </tr>
+		<% end %>
+	</table>
+	<table class="table table-striped">
+	  <tr>
+	    <th>
+	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action']  %>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <%= link_to t('New Allocation'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape new_allocation_path(process_id: @process.id, allocation_category: @allocation_category)}", :class => BUTTONS_CLS['action'] if @allocation_category && @process && has_action_right?('create', params[:controller]) %>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <%= link_to t('New Allocation'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape new_allocation_path(process_id: @process.id, allocation_category: @allocation__category, subaction: @allocation_category)}", :class => BUTTONS_CLS['action'] if @allocation_category && @process && has_action_right?('create_' + @allocation_category, params[:controller]) %>
+	  
+	    </th>
+	  </tr>
+	</table>
+	
+<% end %>

@@ -1,0 +1,19 @@
+<% if @view_in_config && @erb_code %>
+    <%= render inline: @erb_code %>
+<% else %>
+  <%= simple_form_for @allocation do |f| %>
+    <%= f.input :process_name, :label => t('Process'), :readonly => true, :input_html => {:value => @process.batch_status.name} %>
+    <%= f.input :process_id, :as => :hidden, :input_html => {:value => @process.id} %>
+    <%= f.input :operator_id, :label => t('Operator'), :collection => Authentify::UsersHelper.return_users('index', 'process_allocx_allocations'), :include_blank => true %>
+    <%= f.input :equipment_id, :label => t('Equipment'), :collection => ProcessAllocx.equipment_class.where(decommissioned: false).order('name'), :include_blank => true %>
+    <%= f.input :description, :label => t('Description'), :input_html => {:rows => 1} %>
+    <%= f.input :qty_in, :label => t('Qty In') %>
+    <%= f.input :qty_out, :label => t('Qty Out') %>
+    
+    
+    <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+    <%= f.button :submit, t('Save') , :class => BUTTONS_CLS['action'] %>
+  <% end %>
+
+<% end %>
+

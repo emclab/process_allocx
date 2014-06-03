@@ -1,0 +1,7 @@
+MfgOrderx.quote_class = 'JobshopQuotex::Quote'
+MfgOrderx.rfq_class = 'JobshopRfqx::Rfq'
+MfgOrderx.customer_class = 'Kustomerx::Customer'
+MfgOrderx.rfq_engine = 'jobshop_rfqx'
+MfgOrderx.show_rfq_path = 'jobshop_rfqx.rfq_path(r)'
+#MfgOrderx.sample_index_path = 'order_samplex.samples_path(:order_id => r.id, :parent_record_id => r.id, :parent_resource => params[:controller])'
+MfgOrderx.mfg_batch_index_path = 'mfg_batchx.batches_path(:order_id => r.id)'
